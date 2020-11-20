@@ -1,37 +1,36 @@
 version: '2'
 services:
-  mongodb:
-    image: mongo:4.0.1
-    container_name: "mongodb-rs1"
-    environment:
-      - MONGO_DATA_DIR=/data/db
-      - MONGO_LOG_DIR=/var/log/mongodb
-    volumes:
-      - "~/service-compose/mongo-data:/data/db"
-      - "./mongodb:/home"
-    ports:
-      - 27017:27017
-    command: mongod --noprealloc --smallfiles --oplogSize 16 --dbpath /data/db --noauth
-    restart: always
+  # mongodb:
+  #   image: mongo:4.0.1
+  #   container_name: "mongodb-rs1"
+  #   environment:
+  #     - MONGO_DATA_DIR=/data/db
+  #     - MONGO_LOG_DIR=/var/log/mongodb
+  #   volumes:
+  #     - "~/service-compose/mongo-data:/data/db"
+  #     - "./mongodb:/home"
+  #   ports:
+  #     - 27017:27017
+  #   command: mongod --noprealloc --smallfiles --oplogSize 16 --dbpath /data/db --noauth
+  #   restart: always
 
-  postgres:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: admin123
-      POSTGRES_USER: admin
-    volumes:
-      - "/Users/useradmin/Documents/jobs/tools/docker-env/postgres/data"
-      - "./postgres-data:/var/lib/postgresql/data"
+  # postgres:
+  #   image: postgres
+  #   restart: always
+  #   environment:
+  #     POSTGRES_PASSWORD: admin123
+  #     POSTGRES_USER: admin
+  #   volumes:
+  #     - "/Users/useradmin/Documents/jobs/tools/docker-env/postgres/data"
+  #     - "./postgres-data:/var/lib/postgresql/data"
+  #   ports:
+  #     - 5432:5432
 
-    ports:
-      - 5432:5432 
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
 
   mysql:
     image: mysql:5.7.26
@@ -52,74 +51,74 @@ services:
       - '3306'
       # Where our data will be persisted
     volumes:
-      - ./mysql-data:/var/lib/mysql
+      - ./mysql:/var/lib/mysql
 
   redis:
     image: redis:3.2.9
     container_name: "redis"
     volumes:
-      - "~/service-compose:/var/lib/redis"
+      - "./redis:/var/lib/redis"
     ports:
       - "6379:6379"
 
-  redis-commander:
-      container_name: redis-commander
-      hostname: redis-commander
-      image: rediscommander/redis-commander:latest
-      restart: always
-      environment:
-      - REDIS_HOSTS=local:redis:6379
-      ports:
-      - 8081:8081
+  # redis-commander:
+  #     container_name: redis-commander
+  #     hostname: redis-commander
+  #     image: rediscommander/redis-commander:latest
+  #     restart: always
+  #     environment:
+  #     - REDIS_HOSTS=local:redis:6379
+  #     ports:
+  #     - 8081:8081
 
-  sonarqube:
-    container_name:  sonarqube
-    image:  sonarqube:latest
-    ports:
-      -  "9000:9000"
-      -  "9092:9092"
+  # sonarqube:
+  #   container_name:  sonarqube
+  #   image:  sonarqube:latest
+  #   ports:
+  #     -  "9000:9000"
+  #     -  "9092:9092"
 
-  jenkins:
-    image: jenkinsci/blueocean
-    user: root
-    ports:
-      - "8080:8080"
-      - "8443:8443"
-      - "50000:50000"
-    volumes:
-      - ./jenkins_data:/var/jenkins_home
-      ##### Mac OS X and Linux ONLY #####
-      - /var/run/docker.sock:/var/run/docker.sock
+  # jenkins:
+  #   image: jenkinsci/blueocean
+  #   user: root
+  #   ports:
+  #     - "8080:8080"
+  #     - "8443:8443"
+  #     - "50000:50000"
+  #   volumes:
+  #     - ./jenkins_data:/var/jenkins_home
+  #     ##### Mac OS X and Linux ONLY #####
+  #     - /var/run/docker.sock:/var/run/docker.sock
 
-  elasticsearch:
-    image: elasticsearch:7.2.0
-    container_name: "elasticsearch"
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    environment:
-      - discovery.type=single-node
-    volumes:
-      # - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-      - "./elasticsearch:/usr/share/elasticsearch/data"
-    networks:
-      - elk
+  # elasticsearch:
+  #   image: elasticsearch:7.2.0
+  #   container_name: "elasticsearch"
+  #   ports:
+  #     - "9200:9200"
+  #     - "9300:9300"
+  #   environment:
+  #     - discovery.type=single-node
+  #   volumes:
+  #     # - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+  #     - "./elasticsearch:/usr/share/elasticsearch/data"
+  #   networks:
+  #     - elk
  
 
-  kibana:
-    container_name: "kibana"
-    build:
-      context: kibana/
-    volumes:
-      - ./kibana/config/:/usr/share/kibana/config
-    ports:
-      - "5601:5601"
-    networks:
-      - elk
-    depends_on:
-      - elasticsearch
+  # kibana:
+  #   container_name: "kibana"
+  #   build:
+  #     context: kibana/
+  #   volumes:
+  #     - ./kibana/config/:/usr/share/kibana/config
+  #   ports:
+  #     - "5601:5601"
+  #   networks:
+  #     - elk
+  #   depends_on:
+  #     - elasticsearch
 
-networks:
-  elk:
-    driver: bridge
+# networks:
+#   elk:
+#     driver: bridge
 
